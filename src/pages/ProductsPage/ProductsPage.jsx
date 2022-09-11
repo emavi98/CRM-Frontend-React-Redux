@@ -1,28 +1,20 @@
-//Hooks
-import { useEffect } from "react";
-import { useCrudTableStore } from "../../hooks/useCrudTableStore";
+// Hooks
+import { useEffect } from 'react';
+import { useCrudTableStore } from '../../hooks/useCrudTableStore';
 
-//Components
-import { TableData } from "../../components/Table/TableData"
-
+// Components
+import { TableData } from '../../components/Table/TableData';
 
 export const ProductsPage = () => {
+	const { startLoadingTable } = useCrudTableStore();
 
-  const { startLoadingTable } = useCrudTableStore();
+	useEffect(() => {
+		startLoadingTable('products');
+	}, []);
 
-  useEffect(() => {
-    startLoadingTable('products');
-  }, [])
-  
-  return (
-    
-    <>
-        <TableData />   
-    </>
-
-    
-    
-    
-    
-  )
-}
+	return (
+		<>
+			<TableData />
+		</>
+	);
+};

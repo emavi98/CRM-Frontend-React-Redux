@@ -1,174 +1,162 @@
-import { createSlice, current } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const storeSlice = createSlice({
-  name: 'storeData',
-  initialState:{
+	name: 'storeData',
+	initialState: {
+		// Pages
+		actualPage: 'dashboard',
 
-    //Pages
-    actualPage:         "dashboard",
+		// Modals
+		isProductModalOpen: false,
+		isModalActionOpen: false,
+		isNeWProduct: false,
+		isModalFeatureOpen: false,
 
-    //Modals
-    isProductModalOpen: false,
-    isModalActionOpen:  false,
-    isNeWProduct:       false,
-    isModalFeatureOpen: false,
+		// Tables
+		infoData: [],
+		infoColumns: [],
+		selectedRecord: [],
+		showSelectedrow: false,
+		dataList: [],
+	},
+	reducers: {
+		// Pages
+		onChangeView: (state, payload) => {},
 
-    //Tables
-    infoData:           [],
-    infoColumns:        [],
-    selectedRecord:     [],
-    showSelectedrow:    false,
-    dataList:           [],
+		// Modals
+		onOpenProductModal: (state, { payload }) => {
+			state.isNeWProduct
+				? (state.isProductModalOpen = true)
+				: (state.isProductModalOpen = true);
+			// state.selectedRecord = [{title: '',category: '',description: '',image:'',price:''}]
+		},
+		onCloseProductModal: state => {
+			state.isProductModalOpen = false;
+			state.selectedRecord = [];
+		},
 
+		onOpenDeleteModal: state => {
+			state.isModalActionOpen = true;
+		},
 
-  },
-  reducers: {
+		onCloseDeleteModal: state => {
+			state.isModalActionOpen = false;
+		},
 
-      //Pages
-      onChangeView: (state,payload) =>{
+		onOpenFeatureModal: state => {
+			state.isModalFeatureOpen = true;
+		},
 
-      },
+		onCloseFeatureModal: state => {
+			state.isModalFeatureOpen = false;
+		},
 
-      //Modals  
-      onOpenProductModal: ( state, {payload} ) => {
-        (state.isNeWProduct)?state.isProductModalOpen = true :
-        state.isProductModalOpen = true;
-        //state.selectedRecord = [{title: '',category: '',description: '',image:'',price:''}]
-      },
-      onCloseProductModal: ( state ) => {
-        state.isProductModalOpen = false;
-        state.selectedRecord = [];
-      },
+		// Tables
+		onLoadTable: (state, { payload }) => {
+			switch (payload.page) {
+				case 'dashboard':
+					state.actualPage = payload.page;
+					break;
 
-      onOpenDeleteModal: (state) => {
-        state.isModalActionOpen = true
-      },
+				case 'customers':
+					state.actualPage = payload.page;
+					state.dataList = payload.data;
+					state.infoData = payload.data;
+					state.infoColumns = Object.keys(payload.data[0])
+						.filter(
+							key =>
+								// Exceptions
+								key !== 'name' && key !== 'address' && key !== '__v'
+						)
+						.map(key => {
+							return { Header: key, accessor: key };
+						});
+					break;
 
-      onCloseDeleteModal: (state) => {
-        state.isModalActionOpen = false
-      },
+				case 'orders':
+					state.actualPage = payload.page;
+					state.dataList = payload.data;
+					state.infoData = payload.data;
+					state.infoColumns = Object.keys(payload.data[0])
+						.filter(
+							key =>
+								// Exceptions
+								key !== 'products' && key !== '__v'
+						)
+						.map(key => {
+							return { Header: key, accessor: key };
+						});
 
-      onOpenFeatureModal: (state) => {
-        state.isModalFeatureOpen = true
-      },
+					break;
 
-      onCloseFeatureModal: (state) => {
-        state.isModalFeatureOpen = false
-      },
+				case 'products':
+					state.actualPage = payload.page;
+					state.dataList = payload.data;
+					state.infoData = payload.data;
+					state.infoColumns = Object.keys(payload.data[0])
+						.filter(key => key !== 'rating' /* Exceptions  && key !== "price" */)
+						.map(key => {
+							return { Header: key, accessor: key };
+						});
 
+					break;
 
-      //Tables
-      onLoadTable: ( state, { payload} ) => {
+				default:
+					break;
+			}
+		},
 
-        switch (payload.page) {
-          case 'dashboard':
-            state.actualPage = payload.page;
-            break;
+		onSelectRecord: (state, { payload }) => {
+			state.selectedRecord = payload;
+			console.log(state.selectedRecord);
+		},
 
-          case 'customers':
-            state.actualPage = payload.page;
-            state.dataList = payload.data;
-            state.infoData = payload.data;
-            state.infoColumns =  Object.keys(payload.data[0])
-            .filter((key) =>
-            //Exceptions
-             key !== "name"  
-             && key !== "address" 
-             && key !== "__v")
-            .map((key) => {
-            return{ Header: key, accessor: key };
-            })
-            break;
-          
-          case 'orders':
-            state.actualPage = payload.page;
-            state.dataList = payload.data;
-            state.infoData = payload.data;
-            state.infoColumns =  Object.keys(payload.data[0])
-            .filter((key) =>
-            //Exceptions
-            key !== "products"   
-            && key !== "__v")
-            .map((key) => {
-            return{ Header: key, accessor: key };
-            })
-        
-            break;
+		// CRUD Table
+		onAddNewProduct: (state, { payload }) => {
+			state.infoData.push(payload);
+			state.selectedRecord = [];
+			state.isProductModalOpen = false;
+		},
+		onUpdateProduct: (state, { payload }) => {
+			state.infoData = state.infoData.map(product => {
+				if (product.id === payload.id) {
+					return payload;
+				}
+				return product;
+			});
+			state.isProductModalOpen = false;
+		},
 
-          case 'products':
-            state.actualPage = payload.page;
-            state.dataList = payload.data;
-            state.infoData = payload.data;
-            state.infoColumns =  Object.keys(payload.data[0]).filter((key) => key !== "rating" /*Exceptions  && key !== "price" */).map((key) => {
-            return{ Header: key, accessor: key };
-            })
-            
-            break;
-        
-          default:
-            break;
-        }
-
-      },
-
-      onSelectRecord: (state,{payload}) => {
-          state.selectedRecord = payload;
-          console.log(state.selectedRecord);
-      },
-      
-
-      //CRUD Table
-      onAddNewProduct: (state, { payload }) => {
-        state.infoData.push( payload);
-        state.selectedRecord = [];
-        state.isProductModalOpen = false;
-      },
-      onUpdateProduct: ( state, { payload }) => {
-       
-        state.infoData = state.infoData.map( product => {
-            if ( product.id === payload.id ) {
-                return payload;
-            }
-            return product;
-        });
-      state.isProductModalOpen = false;  
-      },
-
-      onDeleteProduct: ( state, { payload } ) => {
-            state.infoData = state.infoData.filter( product => product.id !== state.selectedRecord.id )
-            state.selectedRecord = null
-            state.isModalActionOpen = false
-      },
-
-  }//Reducers End
-  
-})
+		onDeleteProduct: (state, { payload }) => {
+			state.infoData = state.infoData.filter(
+				product => product.id !== state.selectedRecord.id
+			);
+			state.selectedRecord = null;
+			state.isModalActionOpen = false;
+		},
+	}, // Reducers End
+});
 
 // Action creators are generated for each case reducer function
-export const { 
+export const {
+	// Pages
+	onChangeView,
 
-  //Pages
-  onChangeView,
+	// Modals
+	onOpenProductModal,
+	onCloseProductModal,
+	onOpenFeatureModal,
 
-  //Modals
-  onOpenProductModal,
-  onCloseProductModal,
-  onOpenFeatureModal,
-  
-  onOpenDeleteModal,
-  onCloseDeleteModal,
+	onOpenDeleteModal,
+	onCloseDeleteModal,
 
-  //Table
-  onLoadTable,
-  onSelectRecord,
+	// Table
+	onLoadTable,
+	onSelectRecord,
 
-
-  //CRUD Table
-  onAddNewProduct,
-  onUpdateProduct,
-  onDeleteProduct,
-  onCloseFeatureModal,
-
-
-
- } = storeSlice.actions
+	// CRUD Table
+	onAddNewProduct,
+	onUpdateProduct,
+	onDeleteProduct,
+	onCloseFeatureModal,
+} = storeSlice.actions;
