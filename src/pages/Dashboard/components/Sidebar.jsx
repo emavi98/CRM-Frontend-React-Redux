@@ -1,6 +1,6 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { /* Link, */ NavLink } from 'react-router-dom';
-import { onOpenFeatureModal } from '../../../store/storeSlice';
+import { onClickSidebar, onOpenFeatureModal } from '../../../store/storeSlice';
 
 export const Sidebar = () => {
 	const dispatch = useDispatch();
@@ -8,6 +8,9 @@ export const Sidebar = () => {
 	const handleLogout = () => {
 		dispatch(onOpenFeatureModal());
 	};
+
+	const [active, setActive] = useState('dashboard');
+
 	return (
 		<>
 			<aside className='ml-[-100%] fixed z-10 top-0 pb-3 px-6 w-full flex flex-col justify-between h-screen border-r bg-white transition duration-300 md:w-4/12 lg:ml-0 lg:w-[25%] xl:w-[20%] 2xl:w-[15%]'>
@@ -26,18 +29,16 @@ export const Sidebar = () => {
 
 					<ul className='space-y-2 tracking-wide mt-8'>
 						<li>
-							<NavLink
-								to='dashboard'
-								className={({ isActive }) =>
-									[
-										'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group',
-										isActive
-											? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
-											: null,
-									]
-										.filter(Boolean)
-										.join(' ')
+							<button
+								className={
+									active === 'dashboard'
+										? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
+										: 'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group'
 								}
+								onClick={() => {
+									dispatch(onClickSidebar('dashboard'));
+									setActive('dashboard');
+								}}
 							>
 								<svg
 									xmlns='http://www.w3.org/2000/svg'
@@ -54,22 +55,20 @@ export const Sidebar = () => {
 									/>
 								</svg>
 								<span className='-mr-1 font-medium'>Dashboard</span>
-							</NavLink>
+							</button>
 						</li>
 
 						<li>
-							<NavLink
-								to='customers'
-								className={({ isActive }) =>
-									[
-										'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group',
-										isActive
-											? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
-											: null,
-									]
-										.filter(Boolean)
-										.join(' ')
+							<button
+								className={
+									active === 'customers'
+										? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
+										: 'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group'
 								}
+								onClick={() => {
+									dispatch(onClickSidebar('customers'));
+									setActive('customers');
+								}}
 							>
 								<svg
 									xmlns='http://www.w3.org/2000/svg'
@@ -86,22 +85,20 @@ export const Sidebar = () => {
 									/>
 								</svg>
 								<span className='-mr-1 font-medium'>Customers</span>
-							</NavLink>
+							</button>
 						</li>
 
 						<li>
-							<NavLink
-								to='orders'
-								className={({ isActive }) =>
-									[
-										'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group',
-										isActive
-											? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
-											: null,
-									]
-										.filter(Boolean)
-										.join(' ')
+							<button
+								className={
+									active === 'orders'
+										? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
+										: 'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group'
 								}
+								onClick={() => {
+									dispatch(onClickSidebar('orders'));
+									setActive('orders');
+								}}
 							>
 								<svg
 									xmlns='http://www.w3.org/2000/svg'
@@ -118,22 +115,20 @@ export const Sidebar = () => {
 									/>
 								</svg>
 								<span className='-mr-1 font-medium'>Orders</span>
-							</NavLink>
+							</button>
 						</li>
 
 						<li>
-							<NavLink
-								to='products'
-								className={({ isActive }) =>
-									[
-										'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group',
-										isActive
-											? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
-											: null,
-									]
-										.filter(Boolean)
-										.join(' ')
+							<button
+								className={
+									active === 'products'
+										? 'relative px-4 py-3 flex items-center space-x-4 rounded-xl text-white bg-gradient-to-r from-sky-600 to-cyan-400'
+										: 'px-4 py-3 flex items-center space-x-4 rounded-md text-gray-600 group'
 								}
+								onClick={() => {
+									dispatch(onClickSidebar('products'));
+									setActive('products');
+								}}
 							>
 								<svg
 									xmlns='http://www.w3.org/2000/svg'
@@ -150,7 +145,7 @@ export const Sidebar = () => {
 									/>
 								</svg>
 								<span className='-mr-1 font-medium'>Products</span>
-							</NavLink>
+							</button>
 						</li>
 					</ul>
 				</div>

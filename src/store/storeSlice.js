@@ -134,6 +134,13 @@ export const storeSlice = createSlice({
 			state.selectedRecord = null;
 			state.isModalActionOpen = false;
 		},
+
+
+		// Sidebar
+
+		onClickSidebar: ( state, { payload }) => {
+			state.actualPage = payload
+		}
 	}, // Reducers End
 });
 
@@ -159,4 +166,9 @@ export const {
 	onUpdateProduct,
 	onDeleteProduct,
 	onCloseFeatureModal,
+
+	// Sidebar
+	onClickSidebar
 } = storeSlice.actions;
+
+

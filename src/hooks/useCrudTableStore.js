@@ -10,19 +10,23 @@ export const useCrudTableStore = () => {
 	const { selectedRecord } = useSelector(state => state.storeData);
 	const dispatch = useDispatch();
 
+	/**
+	 * It takes a page name as an argument, and then it makes an API call to the corresponding endpoint,
+	 * and then it dispatches an action to the reducer
+	 */
 	const startLoadingTable = async page => {
 		switch (page) {
 			case 'dashboard': {
 				// Customers info
 				// const res = await axios.get("");
-				dispatch(onLoadTable({ page }));
+				 	dispatch(onLoadTable({ page }));
 				break;
 			}
 
 			case 'customers': {
-				// Customers info
+			//	Customers info
 				const res = await axios.get('https://fakestoreapi.com/users');
-				dispatch(onLoadTable({ data: res.data, page }));
+				 dispatch(onLoadTable({ data: res.data, page }));
 				break;
 			}
 
@@ -40,11 +44,16 @@ export const useCrudTableStore = () => {
 				break;
 			}
 
+			/* A fallback in case the switch statement doesn't match any of the cases. */
 			default:
 				break;
 		}
 	};
 
+/**
+ * If the selected record has an id, then we're updating an existing record, otherwise we're adding a
+ * new record
+ */
 	const startSavingProduct = () => {
 		if (selectedRecord.id) {
 			dispatch(onUpdateProduct(selectedRecord));

@@ -12,6 +12,10 @@ export const TableActions = () => {
 	const { actualPage } = useSelector(state => state.storeData);
 	const dispatch = useDispatch();
 
+	/**
+	 * If the actual page is not orders, open the product modal, otherwise open the feature modal
+	 * @returns the dispatch of the onOpenProductModal() function.
+	 */
 	const handleClickEdit = () => {
 		if (actualPage !== 'orders') {
 			return dispatch(onOpenProductModal());
